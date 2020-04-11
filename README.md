@@ -131,3 +131,171 @@ Dalam case untuk argumen (-f) user dapat menginput banyak alamat file. Oleh kare
 ```
 
 Case untuk -d dan * potongan kodenya sangat mirip karena hanya mengubah alamat direktori yang akan dimasukinya. Cara kerjanya adalah kita membuka sebuah direktori (fd) setelah itu kita membacanya (readdir) setelah itu kita simpan alamatfilenya lalu dimasukan kedalam fungsi movinfile.
+
+# Soal 4a
+
+Source code : [soal4a.c](https://github.com/GhiffariHaki/SoalShiftSISOP20_modul3_A01/blob/master/soal3/soal4a.c)
+
+```
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+ 
+int main()
+{
+    key_t key = 1234;
+    int *value;
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    value = shmat(shmid, NULL, 0);
+
+    int multiply[4][5];
+
+    int baris, kolom, tengah;
+    int sum = 0;
+    int first[4][2] = {{1, 2},
+                      {3, 4},
+                      {5, 6},
+                      {7, 8}};
+    int second[2][5] = {{10, 9, 8, 7, 6},
+                      {5, 4, 3, 2, 1}};
+
+
+
+    for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++) {
+        for (tengah = 0; tengah < 2; tengah++) {
+          sum = sum + first[baris][tengah]*second[tengah][kolom];
+        }
+ 
+        multiply[baris][kolom] = sum;
+        sum = 0;
+      }
+    }
+ 
+    printf("Hasil Matriks:\n");
+     for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++){
+        printf("%d\t", multiply[baris][kolom]);
+      }
+      printf("\n");
+    }
+    for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++){
+      *value = multiply[baris][kolom];
+      sleep(1);
+      printf("terkirimz %d \n", *value);
+      }
+    }
+    shmdt(value);
+    shmctl(shmid, IPC_RMID, NULL);
+
+	return 0;
+}
+```
+
+# Soal 4b
+
+Source code : [soal4b.c](https://github.com/GhiffariHaki/SoalShiftSISOP20_modul3_A01/blob/master/soal3/soal4b.c)
+
+```
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define MAX 500
+
+int jumlah(int n) {
+    if (n != 0)
+        return n + jumlah(n - 1);
+    else
+        return n;
+}
+
+
+void *faktorial(int angka){
+    printf("%d ", jumlah(angka));
+}
+
+void main()
+{
+    int arr[4][5], angka;
+    key_t key = 1234;
+    int *value;
+    int i, j;
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    value = shmat(shmid, NULL, 0);
+    
+    pthread_t tid[20];
+    int index;
+    for(i = 0; i < 4; i++){
+        for(j = 0; j < 5; j++){
+            arr[i][j] = *value;
+            angka = arr[i][j];
+            pthread_create(&tid[index], NULL, &faktorial, (void*) angka);
+            // printf("\nnilai index [%d][%d] = %d", i, j, *value);
+            printf("\t");
+            index++;
+            sleep(1);
+        }
+        printf("\n");
+    }
+    for (int i = 0; i < index; i++) {
+        pthread_join(tid[i], NULL);
+    }
+
+    shmdt(value);
+    shmctl(shmid, IPC_RMID, NULL);
+
+}
+```
+
+# Soal 4c
+
+Source code : [soal4c.c](https://github.com/GhiffariHaki/SoalShiftSISOP20_modul3_A01/blob/master/soal3/soal4c.c)
+
+```
+#include<stdio.h>
+#include<stdlib.h>
+#include<fcntl.h>
+#include<errno.h>
+#include<sys/wait.h>
+#include<unistd.h>
+
+
+int main(){
+    int p[2];
+    pid_t pp;
+    if(pipe(p) == -1)
+    {
+        fprintf(stderr, "pipe failed");
+        return 1;
+    }
+    pp = fork();
+    if(pp < 0){
+        fprintf(stderr, "fork failed");
+    }
+    else if(pp !=  0) //parent process
+    {
+        close(0);
+        dup2(p[0], 0);
+        close(p[0]);
+        close(p[1]);
+        char *argv[] = {"wc", "-l", NULL};
+        execv("/usr/bin/wc", argv);
+    }
+    else //child
+    {
+        close(0);
+        dup2(p[1], 1);
+        close(p[0]);
+        close(p[1]);
+        char *argv[] = {"ls", NULL};
+        execv("/bin/ls", argv);
+    }
+    
+    
+}
+```
