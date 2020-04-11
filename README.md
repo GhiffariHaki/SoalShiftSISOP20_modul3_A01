@@ -193,10 +193,25 @@ int main()
 	return 0;
 }
 ```
+4a. Di bagian ini kita diminta untuk mengalikan matriks dengan ukuran 4x2 dan 2x5, yang mana hasilnya adalah matriks 4x5, dan isi dari matriks awalnya kita isi sendiri.
+
+.....
+for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++) {
+        for (tengah = 0; tengah < 2; tengah++) {
+          sum = sum + first[baris][tengah]*second[tengah][kolom];
+        }
+ 
+        multiply[baris][kolom] = sum;
+        sum = 0;
+      }
+    }
+.....
 
 # Soal 4b
 
 Source code : [soal4b.c](https://github.com/GhiffariHaki/SoalShiftSISOP20_modul3_A01/blob/master/soal3/soal4b.c)
+
 
 ```
 #include <stdio.h>
@@ -250,7 +265,7 @@ void main()
     shmctl(shmid, IPC_RMID, NULL);
 
 }
-```
+```4b. setelah kita menghitung perkalian matriks tersebut, hasilnya akan dikirim ke proses soal4b.c menggunakan shared memory. setelah soal4b.c mendapat kiriman dari soal4a.c, matriks hasil akan dilakukan penjumlahan dari n sampai 1. lalu ditampilkan hasilnya dengan tampilan seperti matriks.
 
 # Soal 4c
 
@@ -299,3 +314,6 @@ int main(){
     
 }
 ```
+4c. di sub-soal bagian ini kita diminta untuk menjalankan mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l" menggunakan IPC Pipe
+
+
