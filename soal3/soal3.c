@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
         while( (masuk=readdir(fd)) ){
             if ( !strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") )
             continue;
-            printf("%s %d\n",masuk->d_name,masuk->d_type);
+            //printf("%s %d\n",masuk->d_name,masuk->d_type);
 
             strcpy(alamatfile,cwd);
             strcat(alamatfile,"/");
@@ -166,16 +166,12 @@ int main(int argc, char *argv[]) {
         struct dirent *masuk;
         fd = opendir(argv[2]);
 
-        if(fd == NULL)
-        {
-            printf("error\n");
-        }
+        if(fd == NULL) printf("error\n");
         while( (masuk=readdir(fd)) )
         {
             if ( !strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") ) continue;
-            
-			printf("%s %d\n",masuk->d_name,masuk->d_type);
-
+            //printf("%s %d\n",masuk->d_name,masuk->d_type);
+		
             strcpy(alamatfile,argv[2]);
             strcat(alamatfile,"/");
             strcat(alamatfile,masuk->d_name);
