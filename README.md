@@ -265,7 +265,8 @@ void main()
     shmctl(shmid, IPC_RMID, NULL);
 
 }
-```4b. setelah kita menghitung perkalian matriks tersebut, hasilnya akan dikirim ke proses soal4b.c menggunakan shared memory. setelah soal4b.c mendapat kiriman dari soal4a.c, matriks hasil akan dilakukan penjumlahan dari n sampai 1. lalu ditampilkan hasilnya dengan tampilan seperti matriks.
+```
+4b. setelah kita menghitung perkalian matriks tersebut, hasilnya akan dikirim ke proses soal4b.c menggunakan shared memory. setelah soal4b.c mendapat kiriman dari soal4a.c, matriks hasil akan dilakukan penjumlahan dari n sampai 1. lalu ditampilkan hasilnya dengan tampilan seperti matriks.
 
 # Soal 4c
 
@@ -314,6 +315,7 @@ int main(){
     
 }
 ```
+
 4c. di sub-soal bagian ini kita diminta untuk menjalankan mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l" menggunakan IPC Pipe
 
 
